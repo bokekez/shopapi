@@ -43,7 +43,7 @@ app.post('/register', (req, res) => {
       password: password
 		})
 		.into('users')
-    .returning('email')
+    .returning('username')
 	// .returning('email')
 		// .then(loginEmail =>{
     //   return trx('users')
@@ -53,6 +53,7 @@ app.post('/register', (req, res) => {
     //       username: username,
 		// 	    })
 		.then(user => {
+          console.log(user);
 				  res.json(user[0]);
           console.log(user);
 			    })
