@@ -84,5 +84,27 @@ app.post('/login', (req, res)=>{
 	})
 })
 
+app.post('/profile', (req, res) => {
+	const item = req.body.item;
+	const price = req.body.price;
+	db.transaction(trx => {
+		trx.insert({
+			item: item,
+			price: price
+		})
+		.into('items')
+    	.returning('item')
+		.then(item => {
+          console.log(item);
+				  res.json(item[0]);
+          console.log(item);
+			    })
+	  .then(trx.commit)
+	  .catch(trx.rollback)
+	})
+  .catch(err => res.status(400).json('unable to register'));
+
+})
+
 console.log('10 4 dinosaur')
 app.listen(3000);
