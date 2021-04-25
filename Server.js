@@ -6,7 +6,7 @@ const knex = require('knex');
 
 const app = express();
 
-app.use(cors({credentials: true, origin: true}));
+app.use(cors());
 
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended: false}));
@@ -51,7 +51,7 @@ app.post('/register', cors(), (req, res) => {
 		trx.insert({
 			username: username,
 			email: email,
-      password: password
+      		password: password
 		})
 		.into('users')
     .returning('username')
