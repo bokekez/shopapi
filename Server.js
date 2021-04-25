@@ -24,12 +24,12 @@ const db = knex({
     }
 });
 
-app.get('/', (req, res) =>{
-      db.select('id', 'item', 'price', 'sales').from('items')
-      .then(data =>{
-          res.json(data)
-      })
-})
+// app.get('/', (req, res) =>{
+//       db.select('id', 'item', 'price', 'sales').from('items')
+//       .then(data =>{
+//           res.json(data)
+//       })
+// })
 
 app.post('/register', (req, res) => {
 	const email = req.body.email;
