@@ -31,6 +31,10 @@ const db = knex({
 //       })
 // })
 
+app.get('/', (req, res) =>{
+	res.send('it is working!')
+})
+
 app.post('/register', (req, res) => {
 	const email = req.body.email;
 	const username = req.body.username;
