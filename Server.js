@@ -8,11 +8,12 @@ const app = express();
 
 app.use(cors())
 
-app.options('*', cors())
-// app.use((req, res, next) => {
-// 	res.header('Access-Control-Allow-Origin', '*');
-// 	next();
-//   });
+// server.js or app.js
+
+app.use((req, res, next) => {
+	res.header('Access-Control-Allow-Origin', '*');
+	next();
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
