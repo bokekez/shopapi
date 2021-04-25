@@ -17,8 +17,7 @@ const db = knex({
     //     // connectionString: process.env.DATABASE_URL,
     //     // ssl: true,
       // host : 'postgresql-amorphous-40499',
-     //host : '127.0.0.1',
-	  host: postgresql-amorphous-40499,
+      host : 'postgresql-sinuous-72151',
       user : 'postgres',
       password : 'test',
       database : 'shop'
