@@ -8,6 +8,7 @@ const app = express();
 
 app.use(cors())
 
+app.options('*', cors())
 // app.use((req, res, next) => {
 // 	res.header('Access-Control-Allow-Origin', '*');
 // 	next();
@@ -111,7 +112,7 @@ app.post('/profile', cors(), (req, res) => {
 	  .then(trx.commit)
 	  .catch(trx.rollback)
 	})
-  .catch(err => res.status(400).json('unable to register'));
+  .catch(err => res.status(400).json('unable create'));
 
 })
 
