@@ -8,10 +8,10 @@ const app = express();
 
 app.use(cors())
 
-app.use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', '*');
-	next();
-  });
+// app.use((req, res, next) => {
+// 	res.header('Access-Control-Allow-Origin', '*');
+// 	next();
+//   });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -31,7 +31,7 @@ const db = knex({
     }
 });
 
-app.get('/', (req, res) =>{
+app.get('/', cors(), (req, res) =>{
       db.select('id', 'item', 'price', 'sales').from('items')
       .then(data =>{
           res.json(data)
@@ -40,7 +40,7 @@ app.get('/', (req, res) =>{
 
 
 
-app.post('/register', (req, res) => {
+app.post('/register', cors(), (req, res) => {
 	const email = req.body.email;
 	const username = req.body.username;
 	const password = req.body.password;
@@ -74,7 +74,7 @@ app.post('/register', (req, res) => {
 
 })
 
-app.post('/login', (req, res)=>{
+app.post('/login', cors(),(req, res)=>{
 	db.select('email').from('users')
 	.where('email', '=', req.body.email)
 	.then(data => {
@@ -93,7 +93,7 @@ app.post('/login', (req, res)=>{
 	})
 })
 
-app.post('/profile', (req, res) => {
+app.post('/profile', cors(), (req, res) => {
 	const item = req.body.item;
 	const price = req.body.price;
 	db.transaction(trx => {
