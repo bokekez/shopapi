@@ -34,7 +34,7 @@ const db = knex({
 });
 
 app.get('/', cors(), (req, res) =>{
-      db.select('id', 'item', 'price', 'sales').from('items')
+      db.select('id', 'item', 'price', 'sales', 'username').from('items')
       .then(data =>{
           res.json(data)
 		  console.log(data);
@@ -99,10 +99,12 @@ app.post('/login', cors(),(req, res)=>{
 app.post('/profile', cors(), (req, res) => {
 	const item = req.body.item;
 	const price = req.body.price;
+	const username = req.body.username;
 	db.transaction(trx => {
 		trx.insert({
 			item: item,
-			price: price
+			price: price,
+			username: usern
 		})
 		.into('items')
     	.returning('item')
