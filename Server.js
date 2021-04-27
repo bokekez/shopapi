@@ -18,13 +18,17 @@ app.use(function(req, res, next) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 
 const db = knex({
      client: 'pg',
      connection: {
-		connectionString : process.env.DATABASE_URL,
-    	ssl: true
+		// connectionString : process.env.DATABASE_URL,
+    	// ssl: true
+		connectionString: process.env.DATABASE_URL,
+		ssl: {
+		  rejectUnauthorized: false
+		}
     //   host : '127.0.0.1',
     //   user : 'postgres',
     //   password : 'test',
