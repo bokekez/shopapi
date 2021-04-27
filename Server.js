@@ -17,6 +17,8 @@ app.use(function(req, res, next) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
+
 const db = knex({
      client: 'pg',
      connection: {
@@ -36,7 +38,6 @@ app.get('/', cors(), (req, res) =>{
       .then(data =>{
           res.json(data)
 		  console.log(data);
-		  res('10 4 dino');
       })
 })
 
