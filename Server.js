@@ -47,17 +47,20 @@ app.post('/register', (req, res) => {
 	const username = req.body.username;
 	const password = req.body.password;
 	// const hash = bcrypt.hashSync(password);
+	let dbHash = '';
 	bcrypt.genSalt(saltRounds, function(err, salt) {
 		bcrypt.hash(password, salt, function(err, hash) {
 		// returns hash
+		dbHash = hash;
 		console.log(hash);
+		console.log('2', dbHash);
 		});
 	});
 	db.transaction(trx => {
 		trx.insert({
 			username: username,
 			email: email,
-      		password: hash
+      		password: dbHash
 		})
 		.into('users')
     	.returning('username')
