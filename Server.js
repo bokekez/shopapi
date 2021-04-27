@@ -35,6 +35,8 @@ app.get('/', cors(), (req, res) =>{
       db.select('id', 'item', 'price', 'sales').from('items')
       .then(data =>{
           res.json(data)
+		  console.log(data);
+		  res('10 4 dino');
       })
 })
 
@@ -111,7 +113,7 @@ app.post('/profile', cors(), (req, res) => {
 	  .then(trx.commit)
 	  .catch(trx.rollback)
 	})
-  .catch(err => res.status(400).json('unable create'));
+  .catch(err => res.status(400).json('unable to create'));
 
 })
 
