@@ -23,11 +23,9 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 const db = knex({
      client: 'pg',
      connection: {
-    	// connectionString: process.env.DATABASE_URL,
 		connectionString : process.env.DATABASE_URL,
     	ssl: true
-      // host : 'postgresql-amorphous-40499',
-      
+    //   host : '127.0.0.1',
     //   user : 'postgres',
     //   password : 'test',
     //   database : 'shop'
@@ -36,7 +34,7 @@ const db = knex({
 
 const saltRounds = 10;
 
-app.get('/', cors(), (req, res) =>{
+app.get('/', (req, res) =>{
       db.select('id', 'item', 'price', 'sales', 'username').from('items')
       .then(data =>{
           res.json(data)
@@ -44,9 +42,7 @@ app.get('/', cors(), (req, res) =>{
       })
 })
 
-
-
-app.post('/register', cors(), (req, res) => {
+app.post('/register', (req, res) => {
 	const email = req.body.email;
 	const username = req.body.username;
 	const password = req.body.password;
@@ -66,13 +62,13 @@ app.post('/register', cors(), (req, res) => {
 		.into('users')
     	.returning('username')
 	// .returning('email')
-		// .then(loginEmail =>{
+	// 	 .then(loginEmail =>{
     //   return trx('users')
     //   .returning('*')
     //       .insert({
     //       email: loginEmail[0],
     //       username: username,
-		// 	    })
+	// 		    })
 		.then(user => {
           console.log(user);
 				  res.json(user[0]);
@@ -92,19 +88,18 @@ app.post('/login', cors(),(req, res)=>{
 	.then(data => {
 		// const isValid = req.body.password;
 		bcrypt.compare(password, hash, function(err, result) {
-			// returns result
-		  });
-		if (result){
-			return 	db.select('*').from('users')
-			.where('email', '=', req.body.email)
-			.then(user => {
-				console.log(user);
-				res.json(user[0])
-			})
-			.catch(err => res.status(400).json('Unable to get user'))
-		} else {
-			res.status(400).json('Wrong credentials')
-		}
+			if (result){
+				return 	db.select('*').from('users')
+				.where('email', '=', req.body.email)
+				.then(user => {
+					console.log(user);
+					res.json(user[0])
+				})
+				.catch(err => res.status(400).json('Unable to get user'))
+			} else {
+				res.status(400).json('Wrong credentials')
+			}
+		});	
 	})
 })
 
