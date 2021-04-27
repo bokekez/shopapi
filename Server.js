@@ -92,19 +92,23 @@ app.post('/login', cors(),(req, res)=>{
 	.where('email', '=', req.body.email)
 	.then(data => {
 		const tempPw = req.body.password;
+		let valid = false;
 		bcrypt.compare(tempPw, password, function(err, result) {
-			if (result){
-				return 	db.select('*').from('users')
-				.where('email', '=', req.body.email)
-				.then(user => {
-					console.log(user);
-					res.json(user[0])
-				})
-				.catch(err => res.status(400).json('Unable to get user'))
-			} else {
-				res.status(400).json('Wrong credentials')
+			if(result){
+				valid = true;
 			}
 		});	
+		if (valid){
+			return 	db.select('*').from('users')
+			.where('email', '=', req.body.email)
+			.then(user => {
+				console.log(user);
+				res.json(user[0])
+			})
+			.catch(err => res.status(400).json('Unable to get user'))
+		} else {
+			res.status(400).json('Wrong credentials')
+		}
 	})
 })
 
