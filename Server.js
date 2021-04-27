@@ -65,19 +65,21 @@ app.post('/register', (req, res) => {
       		password: dbHash
 		})
 		.into('users')
-    	// .returning('username')
-		.returning('email')
-		.then(loginEmail =>{
-		return trx('users')
-		.returning('*')
-		.insert({
-			email: loginEmail[0],
-			username: username,
-			})
+    	.returning('username')
+	// .returning('email')
+	// 	 .then(loginEmail =>{
+    //   return trx('users')
+    //   .returning('*')
+    //       .insert({
+    //       email: loginEmail[0],
+    //       username: username,
+	// 		    })
 		.then(user => {
-			res.json(user[0]);
-			})
-		})
+          console.log(user);
+				  res.json(user[0]);
+          console.log(user);
+			    })
+		// })
 	  .then(trx.commit)
 	  .catch(trx.rollback)
 	})
