@@ -66,6 +66,7 @@ app.post('/register', (req, res) => {
 		})
 		.into('users')
     	.returning('username')
+		.catch(err => console.log(err))
 	// .returning('email')
 	// 	 .then(loginEmail =>{
     //   return trx('users')
@@ -80,7 +81,7 @@ app.post('/register', (req, res) => {
 			})
 		// })
 	  .then(trx.commit)
-	  .catch(trx.rollback, console.error)
+	  .catch(trx.rollback)
 	})
   .catch(err => res.status(400).json('unable to register'));
 
