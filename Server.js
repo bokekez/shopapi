@@ -25,14 +25,14 @@ const db = knex({
      connection: {
 		// connectionString : process.env.DATABASE_URL,
     	// ssl: true
-		connectionString: process.env.DATABASE_URL,
-		ssl: {
-		  rejectUnauthorized: false
-		}
-    //   host : '127.0.0.1',
-    //   user : 'postgres',
-    //   password : 'test',
-    //   database : 'shop'
+		// connectionString: process.env.DATABASE_URL,
+		// ssl: {
+		//   rejectUnauthorized: false
+		// }
+      host : '127.0.0.1',
+      user : 'postgres',
+      password : 'test',
+      database : 'shop'
     }
 });
 
@@ -88,18 +88,22 @@ app.post('/register', (req, res) => {
 })
 
 app.post('/login', (req, res)=>{
-	db.select('email').from('users')
+	db.select('email', 'password').from('users')
 	.where('email', '=', req.body.email)
 	.then(data => {
 		const tempPw = req.body.password;
-		let valid = false;
-		const hash = db.select('password').from('users')
-		bcrypt.compare(tempPw, hash, function(err, result) {
-			if(result){
-				valid = true;
-			}
-		});	
-		if (valid){
+		const tempHash = data[0].password;
+		console.log(tempHash)
+		// let valid = false;
+		// const tempHash = data[0].password;
+		// console.log(tempHash);
+		// bcrypt.compare(tempPw, tempHash, function(err, result) {
+		// 	if(result){
+		// 		valid = true;
+		// 	}
+		// });	
+		const isValid = bcrypt.compareSync(tempPw, tempHash);
+		if (isValid){
 			return 	db.select('*').from('users')
 			.where('email', '=', req.body.email)
 			.then(user => {
