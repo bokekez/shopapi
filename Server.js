@@ -25,14 +25,14 @@ const db = knex({
      connection: {
 		// connectionString : process.env.DATABASE_URL,
     	// ssl: true
-		// connectionString: process.env.DATABASE_URL,
-		// ssl: {
-		//   rejectUnauthorized: false
-		// }
-      host : '127.0.0.1',
-      user : 'postgres',
-      password : 'test',
-      database : 'shop'
+		connectionString: process.env.DATABASE_URL,
+		ssl: {
+		  rejectUnauthorized: false
+		}
+    //   host : '127.0.0.1',
+    //   user : 'postgres',
+    //   password : 'test',
+    //   database : 'shop'
     }
 });
 
