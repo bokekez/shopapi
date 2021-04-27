@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 // const bcrypt = require('bcrypt-nodejs');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const cors = require('cors');
 const knex = require('knex');
 
@@ -14,8 +14,6 @@ app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	next();
   });
-
-const saltRounds = 10;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -36,9 +34,7 @@ const db = knex({
     }
 });
 
-bcrypt.genSalt(saltRounds, function(err, salt) {
-	// returns salt
-  });
+const saltRounds = 10;
 
 app.get('/', cors(), (req, res) =>{
       db.select('id', 'item', 'price', 'sales', 'username').from('items')
@@ -65,10 +61,10 @@ app.post('/register', cors(), (req, res) => {
 		trx.insert({
 			username: username,
 			email: email,
-      		password: password
+      		password: hash
 		})
 		.into('users')
-    .returning('username')
+    	.returning('username')
 	// .returning('email')
 		// .then(loginEmail =>{
     //   return trx('users')
