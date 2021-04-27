@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 // const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt');
 const cors = require('cors');
 const knex = require('knex');
 
@@ -13,6 +14,8 @@ app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	next();
   });
+
+const saltRounds = 10;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -33,6 +36,10 @@ const db = knex({
     }
 });
 
+bcrypt.genSalt(saltRounds, function(err, salt) {
+	// returns salt
+  });
+
 app.get('/', cors(), (req, res) =>{
       db.select('id', 'item', 'price', 'sales', 'username').from('items')
       .then(data =>{
@@ -48,6 +55,12 @@ app.post('/register', cors(), (req, res) => {
 	const username = req.body.username;
 	const password = req.body.password;
 	// const hash = bcrypt.hashSync(password);
+	bcrypt.genSalt(saltRounds, function(err, salt) {
+		bcrypt.hash(password, salt, function(err, hash) {
+		// returns hash
+		console.log(hash);
+		});
+	});
 	db.transaction(trx => {
 		trx.insert({
 			username: username,
@@ -81,8 +94,11 @@ app.post('/login', cors(),(req, res)=>{
 	db.select('email').from('users')
 	.where('email', '=', req.body.email)
 	.then(data => {
-		const isValid = req.body.password;
-		if (isValid){
+		// const isValid = req.body.password;
+		bcrypt.compare(password, hash, function(err, result) {
+			// returns result
+		  });
+		if (result){
 			return 	db.select('*').from('users')
 			.where('email', '=', req.body.email)
 			.then(user => {
