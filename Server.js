@@ -104,7 +104,7 @@ app.post('/profile', cors(), (req, res) => {
 		trx.insert({
 			item: item,
 			price: price,
-			username: usern
+			username: username
 		})
 		.into('items')
     	.returning('item')
