@@ -76,9 +76,9 @@ app.post('/register', (req, res) => {
 	// 		    })
 		.then(user => {
           console.log(user);
-				  res.json(user[0]);
+				res.json(user[0]);
           console.log(user);
-			    })
+			})
 		// })
 	  .then(trx.commit)
 	  .catch(trx.rollback)
@@ -93,7 +93,8 @@ app.post('/login', (req, res)=>{
 	.then(data => {
 		const tempPw = req.body.password;
 		let valid = false;
-		bcrypt.compare(tempPw, password, function(err, result) {
+		const hash = db.select('password').from('users')
+		bcrypt.compare(tempPw, hash, function(err, result) {
 			if(result){
 				valid = true;
 			}
