@@ -51,38 +51,38 @@ app.post('/register', (req, res) => {
 	const username = req.body.username;
 	const password = req.body.password;
 	// const hash = bcrypt.hashSync(password);
-	//let dbHash = '';
+	let dbHash = '';
 	bcrypt.hash(password, saltRounds, function(err, hash) {
 		// returns hash
-		// dbHash = hash;
+		dbHash = hash;
 		console.log(hash);
 		console.log('2', dbHash);
-		db.transaction(trx => {
-			trx.insert({
-				username: username,
-				email: email,
-				  password: hash
+	}).then(
+	db.transaction(trx => {
+		trx.insert({
+			username: username,
+			email: email,
+      		password: dbHash
+		})
+		.into('users')
+    	.returning('username')
+		.catch(err => console.log)
+	// .returning('email')
+	// 	 .then(loginEmail =>{
+    //   return trx('users')
+    //   .returning('*')
+    //       .insert({
+    //       email: loginEmail[0],
+    //       username: username,
+	// 		    })
+		.then(user => {
+          console.log(user);
+				res.json(user[0]);
 			})
-			.into('users')
-			.returning('username')
-			.catch(err => console.log('pw', err))
-		// .returning('email')
-		// 	 .then(loginEmail =>{
-		//   return trx('users')
-		//   .returning('*')
-		//       .insert({
-		//       email: loginEmail[0],
-		//       username: username,
-		// 		    })
-		})
-	})
-	.then(user => {
-		console.log(user);
-			res.json(user[0]);
-		})
-	// })
-	.then(trx.commit)
-	.catch(trx.rollback)
+		// })
+	  .then(trx.commit)
+	  .catch(trx.rollback)
+	}))
   	.catch(err => res.status(400).json('unable to register'));
 
 })
