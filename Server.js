@@ -52,13 +52,11 @@ app.post('/register', (req, res) => {
 	const password = req.body.password;
 	// const hash = bcrypt.hashSync(password);
 	let dbHash = '';
-	bcrypt.genSalt(saltRounds, function(err, salt) {
-		bcrypt.hash(password, salt, function(err, hash) {
+	bcrypt.hash(password, saltRounds, function(err, hash) {
 		// returns hash
 		dbHash = hash;
 		console.log(hash);
 		console.log('2', dbHash);
-		});
 	});
 	db.transaction(trx => {
 		trx.insert({
@@ -93,8 +91,8 @@ app.post('/login', cors(),(req, res)=>{
 	db.select('email').from('users')
 	.where('email', '=', req.body.email)
 	.then(data => {
-		// const isValid = req.body.password;
-		bcrypt.compare(password, hash, function(err, result) {
+		const tempPw = req.body.password;
+		bcrypt.compare(tempPw, password, function(err, result) {
 			if (result){
 				return 	db.select('*').from('users')
 				.where('email', '=', req.body.email)
