@@ -77,11 +77,10 @@ app.post('/register', (req, res) => {
 		.then(user => {
           console.log(user);
 				res.json(user[0]);
-          console.log(user);
 			})
 		// })
 	  .then(trx.commit)
-	  .catch(trx.rollback)
+	  .catch(trx.rollback, console.error)
 	})
   .catch(err => res.status(400).json('unable to register'));
 
