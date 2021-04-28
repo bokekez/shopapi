@@ -25,14 +25,14 @@ const db = knex({
      connection: {
 		// connectionString : process.env.DATABASE_URL,
     	// ssl: true
-		connectionString: process.env.DATABASE_URL,
-		ssl: {
-		  rejectUnauthorized: false
-		}
-    //   host : '127.0.0.1',
-    //   user : 'postgres',
-    //   password : 'test',
-    //   database : 'shop'
+		// connectionString: process.env.DATABASE_URL,
+		// ssl: {
+		//   rejectUnauthorized: false
+		// }
+      host : '127.0.0.1',
+      user : 'postgres',
+      password : 'test',
+      database : 'shop'
     }
 });
 
@@ -57,16 +57,34 @@ app.post('/register', (req, res) => {
 		dbHash = hash;
 		console.log(hash);
 		console.log('2', dbHash);
-	}).then(
-	db.transaction(trx => {
-		trx.insert({
-			username: username,
-			email: email,
-      		password: dbHash
-		})
-		.into('users')
-    	.returning('username')
+		db.transaction(trx => {
+			trx.insert({
+				username: username,
+				email: email,
+				  password: dbHash
+			})
+			.into('users')
+		.returning('username')
 		.catch(err => console.log)
+		.then(user => {
+			console.log(user);
+				  res.json(user[0]);
+			  })
+		  // })
+		.then(trx.commit)
+		.catch(trx.rollback)
+		})
+		.catch(err => res.status(400).json('unable to register'));
+	})
+	// db.transaction(trx => {
+	// 	trx.insert({
+	// 		username: username,
+	// 		email: email,
+    //   		password: dbHash
+	// 	})
+	// 	.into('users')
+    // 	.returning('username')
+	// 	.catch(err => console.log)
 	// .returning('email')
 	// 	 .then(loginEmail =>{
     //   return trx('users')
@@ -75,15 +93,15 @@ app.post('/register', (req, res) => {
     //       email: loginEmail[0],
     //       username: username,
 	// 		    })
-		.then(user => {
-          console.log(user);
-				res.json(user[0]);
-			})
-		// })
-	  .then(trx.commit)
-	  .catch(trx.rollback)
-	}))
-  	.catch(err => res.status(400).json('unable to register'));
+	// 	.then(user => {
+    //       console.log(user);
+	// 			res.json(user[0]);
+	// 		})
+	// 	// })
+	//   .then(trx.commit)
+	//   .catch(trx.rollback)
+	// })
+  	// .catch(err => res.status(400).json('unable to register'));
 
 })
 
