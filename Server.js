@@ -56,7 +56,7 @@ app.post('/register', (req, res) => {
 		// returns hash
 		// dbHash = hash;
 		console.log(hash);
-		console.log('2', dbHash);
+		// console.log('2', dbHash);
 		db.transaction(trx => {
 			trx.insert({
 				username: username,
