@@ -39,7 +39,7 @@ const db = knex({
 const saltRounds = 10;
 
 app.get('/', (req, res) =>{
-      db.select('id', 'item', 'price', 'sales', 'username').from('items')
+      db.select('id', 'item', 'price', 'username', 'sales').from('items')
       .then(data =>{
           res.json(data)
 		  console.log(data);
