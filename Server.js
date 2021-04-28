@@ -25,14 +25,14 @@ const db = knex({
      connection: {
 		// connectionString : process.env.DATABASE_URL,
     	// ssl: true
-		// connectionString: process.env.DATABASE_URL,
-		// ssl: {
-		//   rejectUnauthorized: false
-		// }
-      host : '127.0.0.1',
-      user : 'postgres',
-      password : 'test',
-      database : 'shop'
+		connectionString: process.env.DATABASE_URL,
+		ssl: {
+		  rejectUnauthorized: false
+		}
+    //   host : '127.0.0.1',
+    //   user : 'postgres',
+    //   password : 'test',
+    //   database : 'shop'
     }
 });
 
@@ -61,18 +61,16 @@ app.post('/register', (req, res) => {
 			trx.insert({
 				username: username,
 				email: email,
-				  password: hash
+				password: hash
 			})
 			.into('users')
-		.returning('username')
-		.catch(err => console.log)
-		.then(user => {
-			console.log(user);
-				  res.json(user[0]);
-			  })
+			.returning('username')
+			.then(user => {
+				res.json(user[0]);
+			})
 		  // })
-		.then(trx.commit)
-		.catch(trx.rollback)
+			.then(trx.commit)
+			.catch(trx.rollback)
 		})
 		.catch(err => res.status(400).json('unable to register'));
 	})
