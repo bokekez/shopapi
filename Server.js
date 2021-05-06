@@ -23,16 +23,14 @@ app.use(bodyParser.urlencoded({extended: false}));
 const db = knex({
      client: 'pg',
      connection: {
-		// connectionString : process.env.DATABASE_URL,
-    	// ssl: true
-		connectionString: process.env.DATABASE_URL,
-		ssl: {
-		  rejectUnauthorized: false
-		}
-    //   host : '127.0.0.1',
-    //   user : 'postgres',
-    //   password : 'test',
-    //   database : 'shop'
+		// connectionString: process.env.DATABASE_URL,
+		// ssl: {
+		//   rejectUnauthorized: false
+	// 	}
+      host : '127.0.0.1',
+      user : 'postgres',
+      password : 'test',
+      database : 'shop'
     }
 });
 
@@ -74,32 +72,6 @@ app.post('/register', (req, res) => {
 		})
 		.catch(err => res.status(400).json('unable to register'));
 	})
-	// db.transaction(trx => {
-	// 	trx.insert({
-	// 		username: username,
-	// 		email: email,
-    //   		password: dbHash
-	// 	})
-	// 	.into('users')
-    // 	.returning('username')
-	// 	.catch(err => console.log)
-	// .returning('email')
-	// 	 .then(loginEmail =>{
-    //   return trx('users')
-    //   .returning('*')
-    //       .insert({
-    //       email: loginEmail[0],
-    //       username: username,
-	// 		    })
-	// 	.then(user => {
-    //       console.log(user);
-	// 			res.json(user[0]);
-	// 		})
-	// 	// })
-	//   .then(trx.commit)
-	//   .catch(trx.rollback)
-	// })
-  	// .catch(err => res.status(400).json('unable to register'));
 
 })
 
@@ -154,6 +126,31 @@ app.post('/profile', cors(), (req, res) => {
 	  .catch(trx.rollback)
 	})
   .catch(err => res.status(400).json('unable to create'));
+
+})
+
+app.put('/listings', cors(), (req, res) => {
+	const item = req.body.item;
+	const price = req.body.price;
+	const username = req.body.username;
+	db.transaction(trx => {
+		trx.update({
+			item: item,
+			price: price,
+			username: username,
+			sales: 0
+		})
+		.into('items')
+    	.returning('item')
+		.then(item => {
+          console.log(item);
+				  res.json(item[0]);
+          console.log(item);
+			    })
+	  .then(trx.commit)
+	  .catch(trx.rollback)
+	})
+  .catch(err => res.status(400).json('unable to update'));
 
 })
 
