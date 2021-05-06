@@ -135,6 +135,7 @@ app.put('/listings', cors(), (req, res) => {
 	const username = req.body.username;
 	const id = req.body.id;
 	db.select('id').from('users')
+	.where('id', '=', req.body.id)
 	.transaction(trx => {
 		trx.update({
 			item: item,
