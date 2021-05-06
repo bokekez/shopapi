@@ -134,19 +134,19 @@ app.put('/listings', cors(), (req, res) => {
 	const price = req.body.price;
 	const username = req.body.username;
 	const id = req.body.id;
-	db.select('id').from('users')
-	.where('id', '=', req.body.id)
-	.transaction(trx => {
+	db.transaction(trx => {
 		trx.update({
 			item: item,
 			price: price,
 			username: username,
 			sales: 0
 		})
+		.where({id : req.body.id})
 		.into('items')
     	.returning('item')
 		.then(item => {
           console.log(item);
+		  console.log(id)
 				  res.json(item[0]);
           console.log(item);
 			    })
@@ -154,7 +154,7 @@ app.put('/listings', cors(), (req, res) => {
 	  .catch(trx.rollback)
 	})
   .catch(err => res.status(400).json('unable to update'));
-
+	
 })
 
 console.log('10 4 dinosaur')
