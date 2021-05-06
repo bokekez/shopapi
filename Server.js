@@ -154,7 +154,30 @@ app.put('/listings', cors(), (req, res) => {
 	  .catch(trx.rollback)
 	})
   .catch(err => res.status(400).json('unable to update'));
-	
+})
+
+app.delete('/listings', cors(), (req, res) => {
+	const id = req.body.id;
+	db.transaction(trx => {
+		trx.delete({
+			item: item,
+			price: price,
+			username: username,
+			sales: 0
+		})
+		.where({id : req.body.id})
+		.into('items')
+    	.returning('item')
+		.then(item => {
+          console.log(item);
+		  console.log(id)
+				  res.json(item[0]);
+          console.log(item);
+			    })
+	  .then(trx.commit)
+	  .catch(trx.rollback)
+	})
+  .catch(err => res.status(400).json('unable to update'));
 })
 
 console.log('10 4 dinosaur')
