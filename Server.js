@@ -159,12 +159,7 @@ app.put('/listings', cors(), (req, res) => {
 app.delete('/listings', cors(), (req, res) => {
 	const id = req.body.id;
 	db.transaction(trx => {
-		trx.delete({
-			item: item,
-			price: price,
-			username: username,
-			sales: 0
-		})
+		trx.del()
 		.where({id : req.body.id})
 		.into('items')
     	.returning('item')
