@@ -133,7 +133,9 @@ app.put('/listings', cors(), (req, res) => {
 	const item = req.body.item;
 	const price = req.body.price;
 	const username = req.body.username;
-	db.transaction(trx => {
+	const id = req.body.id;
+	db.select('id').from('users')
+	.transaction(trx => {
 		trx.update({
 			item: item,
 			price: price,
