@@ -109,11 +109,13 @@ app.post('/profile', cors(), (req, res) => {
 	const item = req.body.item;
 	const price = req.body.price;
 	const username = req.body.username;
+	const picture = req.body.picture;
 	db.transaction(trx => {
 		trx.insert({
 			item: item,
 			price: price,
-			username: username
+			username: username,
+			picture: picture
 		})
 		.into('items')
     	.returning('item')
