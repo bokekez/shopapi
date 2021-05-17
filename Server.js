@@ -136,12 +136,14 @@ app.put('/listings', cors(), (req, res) => {
 	const price = req.body.price;
 	const username = req.body.username;
 	const id = req.body.id;
+	const picture = req.body.picture;
 	db.transaction(trx => {
 		trx.update({
 			item: item,
 			price: price,
 			username: username,
-			sales: 0
+			sales: 0,
+			picture: picture
 		})
 		.where({id : req.body.id})
 		.into('items')
