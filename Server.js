@@ -110,6 +110,7 @@ app.post('/profile', cors(), (req, res) => {
 	const price = req.body.price;
 	const username = req.body.username;
 	const picture = req.body.picture;
+	console.log('2', picture);
 	db.transaction(trx => {
 		if(picture != ""){
 			trx.insert({
@@ -120,10 +121,10 @@ app.post('/profile', cors(), (req, res) => {
 			})
 			.into('items')
 			.returning('item')
-			.then(item => {
-			  console.log('2', picture);
-					  res.json(item[0]);
-			  console.log(item);
+			.then(item => {;
+					res.json(item[0]);
+					console.log('2', picture);
+			  		console.log(item);
 					})
 		  .then(trx.commit)
 		  .catch(trx.rollback)
@@ -137,9 +138,8 @@ app.post('/profile', cors(), (req, res) => {
 			.into('items')
 			.returning('item')
 			.then(item => {
-			  console.log('2', picture);
-					  res.json(item[0]);
-			  console.log(item);
+					res.json(item[0]);
+			 		console.log(item);
 					})
 		  .then(trx.commit)
 		  .catch(trx.rollback)
