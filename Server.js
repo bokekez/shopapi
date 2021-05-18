@@ -111,7 +111,7 @@ app.post('/profile', cors(), (req, res) => {
 	const username = req.body.username;
 	const picture = req.body.picture;
 	db.transaction(trx => {
-		if(picture !== null){
+		if(picture != ""){
 			trx.insert({
 				item: item,
 				price: price,
@@ -128,7 +128,7 @@ app.post('/profile', cors(), (req, res) => {
 		  .then(trx.commit)
 		  .catch(trx.rollback)
 		}
-		if(picture === null){
+		if(picture == ""){
 			trx.insert({
 				item: item,
 				price: price,
