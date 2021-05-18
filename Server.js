@@ -142,7 +142,6 @@ app.put('/listings', cors(), (req, res) => {
 		trx.update({
 			item: item,
 			price: price,
-			username: username,
 			sales: 0,
 			picture: picture
 		})
@@ -162,7 +161,6 @@ app.put('/listings', cors(), (req, res) => {
 			trx.update({
 				item: item,
 				price: price,
-				username: username,
 			})
 			.where({id : req.body.id})
 			.into('items')
