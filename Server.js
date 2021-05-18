@@ -121,7 +121,7 @@ app.post('/profile', cors(), (req, res) => {
 			.into('items')
 			.returning('item')
 			.then(item => {
-			  console.log(item);
+			  console.log('2', picture);
 					  res.json(item[0]);
 			  console.log(item);
 					})
@@ -137,7 +137,7 @@ app.post('/profile', cors(), (req, res) => {
 			.into('items')
 			.returning('item')
 			.then(item => {
-			  console.log(item);
+			  console.log('2', picture);
 					  res.json(item[0]);
 			  console.log(item);
 					})
