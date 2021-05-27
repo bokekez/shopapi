@@ -5,6 +5,13 @@ const bcrypt = require('bcryptjs');
 const cors = require('cors');
 const knex = require('knex');
 
+const register = require('./Modules/Register');
+const home = require('./Modules/Home');
+const login = require('./Modules/Login');
+const profile = require('./Modules/Profile');
+const listings = require('./Modules/Listings');
+
+
 const app = express();
 
 app.use(cors());
@@ -36,166 +43,166 @@ const db = knex({
 
 const saltRounds = 10;
 
-app.get('/', (req, res) =>{
-      db.select('id', 'item', 'price', 'username', 'sales', 'picture').from('items')
-      .then(data =>{
-          res.json(data)
-		  console.log(data);
-      })
-})
+app.get('/', (req, res) =>{ home.handleHome(req, res, db) })
+//       db.select('id', 'item', 'price', 'username', 'sales', 'picture').from('items')
+//       .then(data =>{
+//           res.json(data)
+// 		  console.log(data);
+//       })
+// })
 
-app.post('/register', (req, res) => {
-	const email = req.body.email;
-	const username = req.body.username;
-	const password = req.body.password;
-	// const hash = bcrypt.hashSync(password);
-	// let dbHash = '';
-	bcrypt.hash(password, saltRounds, function(err, hash) {
-		// returns hash
-		// dbHash = hash;
-		console.log(hash);
-		// console.log('2', dbHash);
-		db.transaction(trx => {
-			trx.insert({
-				username: username,
-				email: email,
-				password: hash
-			})
-			.into('users')
-			.returning('username')
-			.then(user => {
-				res.json(user[0]);
-			})
-		  // })
-			.then(trx.commit)
-			.catch(trx.rollback)
-		})
-		.catch(err => res.status(400).json('unable to register'));
-	})
+app.post('/register', (req, res) => {register.handleRegister(req, res, db, bcrypt) })
+// 	const email = req.body.email;
+// 	const username = req.body.username;
+// 	const password = req.body.password;
+// 	// const hash = bcrypt.hashSync(password);
+// 	// let dbHash = '';
+// 	bcrypt.hash(password, saltRounds, function(err, hash) {
+// 		// returns hash
+// 		// dbHash = hash;
+// 		console.log(hash);
+// 		// console.log('2', dbHash);
+// 		db.transaction(trx => {
+// 			trx.insert({
+// 				username: username,
+// 				email: email,
+// 				password: hash
+// 			})
+// 			.into('users')
+// 			.returning('username')
+// 			.then(user => {
+// 				res.json(user[0]);
+// 			})
+// 		  // })
+// 			.then(trx.commit)
+// 			.catch(trx.rollback)
+// 		})
+// 		.catch(err => res.status(400).json('unable to register'));
+// 	})
 
-})
+// })
 
-app.post('/login', (req, res)=>{
-	db.select('email', 'password').from('users')
-	.where('email', '=', req.body.email)
-	.then(data => {
-		const tempPw = req.body.password;
-		const tempHash = data[0].password;
-		console.log(tempHash)
-		// let valid = false;
-		// const tempHash = data[0].password;
-		// console.log(tempHash);
-		// bcrypt.compare(tempPw, tempHash, function(err, result) {
-		// 	if(result){
-		// 		valid = true;
-		// 	}
-		// });	
-		const isValid = bcrypt.compareSync(tempPw, tempHash);
-		if (isValid){
-			return 	db.select('*').from('users')
-			.where('email', '=', req.body.email)
-			.then(user => {
-				console.log(user);
-				res.json(user[0])
-			})
-			.catch(err => res.status(400).json('Unable to get user'))
-		} else {
-			res.status(400).json('Wrong credentials')
-		}
-	})
-})
+app.post('/login', (req, res)=>{ login.handleLogin(req, res, db, bcrypt) })
+	// db.select('email', 'password').from('users')
+	// .where('email', '=', req.body.email)
+	// .then(data => {
+	// 	const tempPw = req.body.password;
+	// 	const tempHash = data[0].password;
+	// 	console.log(tempHash)
+	// 	// let valid = false;
+	// 	// const tempHash = data[0].password;
+	// 	// console.log(tempHash);
+	// 	// bcrypt.compare(tempPw, tempHash, function(err, result) {
+	// 	// 	if(result){
+	// 	// 		valid = true;
+	// 	// 	}
+	// 	// });	
+	// 	const isValid = bcrypt.compareSync(tempPw, tempHash);
+	// 	if (isValid){
+	// 		return 	db.select('*').from('users')
+	// 		.where('email', '=', req.body.email)
+	// 		.then(user => {
+	// 			console.log(user);
+	// 			res.json(user[0])
+	// 		})
+	// 		.catch(err => res.status(400).json('Unable to get user'))
+	// 	} else {
+	// 		res.status(400).json('Wrong credentials')
+	// 	}
+	// })
+// })
 
-app.post('/profile', cors(), (req, res) => {
-	const item = req.body.item;
-	const price = req.body.price;
-	const username = req.body.username;
-	const picture = req.body.picture;
-	db.transaction(trx => {
-		trx.insert({
-			item: item,
-			price: price,
-			username: username,
-			picture: picture
-		})
-		.into('items')
-    	.returning('item')
-		.then(item => {
-          console.log(item);
-				  res.json(item[0]);
-          console.log(item);
-			    })
-	  .then(trx.commit)
-	  .catch(trx.rollback)
-	})
-  .catch(err => res.status(400).json('unable to create'));
+app.post('/profile', cors(), (req, res) => { profile.handleProfile(req, res, db) })
+// 	const item = req.body.item;
+// 	const price = req.body.price;
+// 	const username = req.body.username;
+// 	const picture = req.body.picture;
+// 	db.transaction(trx => {
+// 		trx.insert({
+// 			item: item,
+// 			price: price,
+// 			username: username,
+// 			picture: picture
+// 		})
+// 		.into('items')
+//     	.returning('item')
+// 		.then(item => {
+//           console.log(item);
+// 				  res.json(item[0]);
+//           console.log(item);
+// 			    })
+// 	  .then(trx.commit)
+// 	  .catch(trx.rollback)
+// 	})
+//   .catch(err => res.status(400).json('unable to create'));
 
-})
+// })
 
-app.put('/listings', cors(), (req, res) => {
-	const item = req.body.item;
-	const price = req.body.price;
-	const username = req.body.username;
-	const id = req.body.id;
-	const picture = req.body.picture;
-	db.transaction(trx => {
-		if(picture != ""){
-		trx.update({
-			item: item,
-			price: price,
-			sales: 0,
-			picture: picture
-		})
-		.where({id : req.body.id})
-		.into('items')
-    	.returning('item')
-		.then(item => {
-          console.log(item);
-		  console.log(id)
-				  res.json(item[0]);
-          console.log(item);
-			    })
-		.then(trx.commit)
-		.catch(trx.rollback)
-		}
-		if(picture == ""){
-			trx.update({
-				item: item,
-				price: price,
-			})
-			.where({id : req.body.id})
-			.into('items')
-			.returning('item')
-			.then(item => {
-			  console.log(item);
-			  console.log(id)
-					  res.json(item[0]);
-			  console.log(item);
-					})
-			.then(trx.commit)
-			.catch(trx.rollback)
-		}
-	})
-  .catch(err => res.status(400).json('unable to update'));
-})
+app.put('/listings', cors(), (req, res) => { listings.handleListingsPut(req, res, db) })
+// 	const item = req.body.item;
+// 	const price = req.body.price;
+// 	const username = req.body.username;
+// 	const id = req.body.id;
+// 	const picture = req.body.picture;
+// 	db.transaction(trx => {
+// 		if(picture != ""){
+// 		trx.update({
+// 			item: item,
+// 			price: price,
+// 			sales: 0,
+// 			picture: picture
+// 		})
+// 		.where({id : req.body.id})
+// 		.into('items')
+//     	.returning('item')
+// 		.then(item => {
+//           console.log(item);
+// 		  console.log(id)
+// 				  res.json(item[0]);
+//           console.log(item);
+// 			    })
+// 		.then(trx.commit)
+// 		.catch(trx.rollback)
+// 		}
+// 		if(picture == ""){
+// 			trx.update({
+// 				item: item,
+// 				price: price,
+// 			})
+// 			.where({id : req.body.id})
+// 			.into('items')
+// 			.returning('item')
+// 			.then(item => {
+// 			  console.log(item);
+// 			  console.log(id)
+// 					  res.json(item[0]);
+// 			  console.log(item);
+// 					})
+// 			.then(trx.commit)
+// 			.catch(trx.rollback)
+// 		}
+// 	})
+//   .catch(err => res.status(400).json('unable to update'));
+// })
 
-app.delete('/listings', cors(), (req, res) => {
-	const id = req.body.id;
-	db.transaction(trx => {
-		trx.del()
-		.where({id : req.body.id})
-		.into('items')
-    	.returning('item')
-		.then(item => {
-          console.log(item);
-		  console.log(id)
-				  res.json(item[0]);
-          console.log(item);
-			    })
-	  .then(trx.commit)
-	  .catch(trx.rollback)
-	})
-  .catch(err => res.status(400).json('unable to update'));
-})
+app.delete('/listings', cors(), (req, res) => { listings.handleListingsDelete(req, res, db) })
+// 	const id = req.body.id;
+// 	db.transaction(trx => {
+// 		trx.del()
+// 		.where({id : req.body.id})
+// 		.into('items')
+//     	.returning('item')
+// 		.then(item => {
+//           console.log(item);
+// 		  console.log(id)
+// 				  res.json(item[0]);
+//           console.log(item);
+// 			    })
+// 	  .then(trx.commit)
+// 	  .catch(trx.rollback)
+// 	})
+//   .catch(err => res.status(400).json('unable to update'));
+// })
 
 console.log('10 4 dinosaur')
 app.listen(process.env.PORT || 3000, () =>{
