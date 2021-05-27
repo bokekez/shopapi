@@ -51,7 +51,7 @@ app.get('/', (req, res) =>{ home.handleHome(req, res, db) })
 //       })
 // })
 
-app.post('/register', (req, res) => {register.handleRegister(req, res, db, bcrypt) })
+app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt, saltRounds) })
 // 	const email = req.body.email;
 // 	const username = req.body.username;
 // 	const password = req.body.password;
@@ -82,7 +82,7 @@ app.post('/register', (req, res) => {register.handleRegister(req, res, db, bcryp
 
 // })
 
-app.post('/login', (req, res)=>{ login.handleLogin(req, res, db, bcrypt) })
+app.post('/login', (req, res)=>{ login.handleLogin(req, res, db, bcrypt, saltRounds) })
 	// db.select('email', 'password').from('users')
 	// .where('email', '=', req.body.email)
 	// .then(data => {

@@ -1,4 +1,4 @@
-const handleLogin = (req, res, db) => {
+const handleLogin = (req, res, db, bcrypt, saltRounds) => {
     db.select('email', 'password').from('users')
 	.where('email', '=', req.body.email)
 	.then(data => {

@@ -1,4 +1,4 @@
-const handleRegister = (req, res, db, bcrypt) => {
+const handleRegister = (req, res, db, bcrypt, saltRounds) => {
     const email = req.body.email;
 	const username = req.body.username;
 	const password = req.body.password;
